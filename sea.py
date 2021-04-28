@@ -1,11 +1,18 @@
 '''
 TODO:
-- 
+- traçar graficos da evoluçao das populaçoes
+- juntar tudo num df
+- guardar as iterações em que troca
 '''
 
 
 from random import random, randint, sample
 from operator import itemgetter
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+pd.set_option('display.max_rows', 500)
 
 
 # Simple [Binary] Evolutionary Algorithm
@@ -18,7 +25,11 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     populacao_1 = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao_1]
     populacao_2 = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao_2]
 
-    for i in range(numb_generations):
+    swap_index = np.zeros((numb_generations, 1))
+    best_fit = np.zeros((numb_generations, 2))
+
+    for k in range(numb_generations):
+        print("geraçao", k)
         # sparents selection
         mate_pool = sel_parents(populacao_1)
         # Variation
@@ -59,20 +70,37 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         # Evaluate the new population
         populacao_2 = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao_2]
 
-        populacao_1.sort(key=itemgetter(1), reverse=True)     # Descending order
-        populacao_2.sort(key=itemgetter(1), reverse=True)     # Descending order
-
         # Switch individuals between populations
         if random() < freq:
-            print("vai trocarr omfg")
+            swap_index[k][0] = 1
+
             # change individuals
             if method == 1:
                 # print("switch_indivs")
                 switch_indivs(populacao_1, populacao_2, replace_n)
             else:
                 # print("switch randoms")
-                switch_random(populacao_1, replace_n)
-                switch_random(populacao_1, replace_n)
+                switch_random(populacao_1, replace_n, size_cromo, fitness_func)
+                switch_random(populacao_2, replace_n, size_cromo, fitness_func)
+
+        populacao_1.sort(key=itemgetter(1), reverse=True)     # Descending order
+        populacao_2.sort(key=itemgetter(1), reverse=True)     # Descending order
+
+        best_fit[k][0] = populacao_1[0][1]
+        best_fit[k][1] = populacao_2[0][1]
+
+    bleh = np.concatenate((best_fit, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Fitness 1", "Fitness 2", "Swap index"])
+    print(tabela)
+    tabela["Fitness 1"].plot(label="Fitness 1")
+    tabela["Fitness 2"].plot(label="Fitness 2")
+    plt.legend()
+
+    swap_index = swap_index.T
+    indexes = np.where(swap_index == 1)
+    print(indexes[1])
+    plt.vlines(indexes[1], -600, 50, color="red")
+    plt.show()
 
     return [best_pop(populacao_1), best_pop(populacao_2)]
 
@@ -261,19 +289,19 @@ def viola(indiv,comp):
     # Count violations
     v = 0
     for elem in indiv:
-	    limite = min(elem-1,comp-elem)
-	    vi = 0
-	    for j in range(1,limite+1):
-		    if ((elem - j) in indiv) and ((elem+j) in indiv):
-			    vi += 1
-	    v += vi
+        limite = min(elem-1,comp-elem)
+        vi = 0
+        for j in range(1,limite+1):
+            if ((elem - j) in indiv) and ((elem+j) in indiv):
+                vi += 1
+        v += vi
     return v
 
 if __name__ == '__main__':
     #to test the code with oneMax function
-    n_gen = 500
+    n_gen = 100
     size_pop = 20
-    size_cromo = 100
+    size_cromo = 200
     prob_mut = 0.01
     prob_cross = 0.8
     sel_parents = tour_sel(3)
@@ -283,7 +311,7 @@ if __name__ == '__main__':
     fitness_func = fitness
     freq = 0.3
     replace_n = int(0.2 * size_pop)
-    method = 1   # 1 - Switch indiv / 2 - Switch random
+    method = 2   # 1 - Switch indiv / 2 - Switch random
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     # display(best_1[0], fenotipo)
