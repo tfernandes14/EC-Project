@@ -102,7 +102,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     plt.vlines(indexes[1], -600, 50, color="red")
     plt.show()
 
-    return [best_pop(populacao_1), best_pop(populacao_2)]
+    return tabela
 
 
 def switch_indivs(pop_1, pop_2, n):
@@ -299,19 +299,19 @@ def viola(indiv,comp):
 
 if __name__ == '__main__':
     #to test the code with oneMax function
-    n_gen = 100
+    n_gen = 200
     size_pop = 20
     size_cromo = 200
     prob_mut = 0.01
     prob_cross = 0.8
-    sel_parents = tour_sel(3)
-    recombination = one_point_cross
+    sel_parents = tour_sel(4)
+    recombination = two_points_cross
     mutation = muta_bin
-    sel_survivors = sel_survivors_elite(0.02)
+    sel_survivors = sel_survivors_elite(0.03)
     fitness_func = fitness
-    freq = 0.3
-    replace_n = int(0.2 * size_pop)
-    method = 2   # 1 - Switch indiv / 2 - Switch random
+    freq = 0
+    replace_n = int(0.5 * size_pop)
+    method = 1   # 1 - Switch indiv / 2 - Switch random
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     # display(best_1[0], fenotipo)
