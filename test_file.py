@@ -2,12 +2,13 @@ from sea import sea, tour_sel, muta_bin, fitness, one_point_cross, two_points_cr
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import random
 
 if __name__ == '__main__':
     
-    n_gen = 150
+    n_gen = 400
     size_pop = 20
-    size_cromo = 10
+    size_cromo = 100
     prob_mut = 0.01
     prob_cross = 0.8
     sel_parents = tour_sel(3)
@@ -24,6 +25,28 @@ if __name__ == '__main__':
     seeds = [random.randint(2,3500) for i in range(30)]
 
 
+    count = 0
+    for i in range(5):
+        np.random.seed(seeds[i])
+        #test different frequences for replacement
+        #pop size
+        for pop_size in [20, 100, 150, 200, 250]:
+            for muta in [0.1, 0.25, 0.5, 0.75, 0.9]:
+                for cross in [0.1, 0.25, 0.5, 0.75, 0.9]:
+
+                    df = sea(n_gen, pop_size, size_cromo, muta, cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, 0, replace_n, method)
+                    #write df
+                    df.to_csv("pop_size{}muta{}cross{}.csv".format(
+                    pop_size,
+                    muta,
+                    cross,
+                    ),
+                        index=False,
+                        index_label=False
+                    )
+                    count += 1
+                    print(count)
+"""
     for seed in seeds:
         np.random.seed(seed)
         #test different frequences for replacement
@@ -38,3 +61,5 @@ if __name__ == '__main__':
             index=False,
             index_label=False
         )
+    
+"""

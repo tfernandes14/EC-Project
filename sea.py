@@ -27,9 +27,10 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
 
     swap_index = np.zeros((numb_generations, 1))
     best_fit = np.zeros((numb_generations, 2))
+    avg_fit = np.zeros((numb_generations, 2))
 
     for k in range(numb_generations):
-        print("geraçao", k)
+        #print("geraçao", k)
         # sparents selection
         mate_pool = sel_parents(populacao_1)
         # Variation
@@ -86,21 +87,25 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         populacao_1.sort(key=itemgetter(1), reverse=True)     # Descending order
         populacao_2.sort(key=itemgetter(1), reverse=True)     # Descending order
 
+        avg_1 = [ind[1] for ind in populacao_1]
+        avg_2 = [ind[1] for ind in populacao_2]
         best_fit[k][0] = populacao_1[0][1]
         best_fit[k][1] = populacao_2[0][1]
+        avg_fit[k][0] = np.mean(avg_1)
+        avg_fit[k][1] = np.mean(avg_2)
 
-    bleh = np.concatenate((best_fit, swap_index), axis=1)
-    tabela = pd.DataFrame(bleh, columns=["Fitness 1", "Fitness 2", "Swap index"])
-    print(tabela)
-    tabela["Fitness 1"].plot(label="Fitness 1")
-    tabela["Fitness 2"].plot(label="Fitness 2")
-    plt.legend()
+    bleh = np.concatenate((best_fit, avg_fit, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Fitness 1", "Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Swap index"])
+    #print(tabela)
+    #tabela["Fitness 1"].plot(label="Fitness 1")
+    #tabela["Fitness 2"].plot(label="Fitness 2")
+    #plt.legend()
 
     swap_index = swap_index.T
     indexes = np.where(swap_index == 1)
-    print(indexes[1])
-    plt.vlines(indexes[1], -600, 50, color="red")
-    plt.show()
+    #print(indexes[1])
+    #plt.vlines(indexes[1], -600, 50, color="red")
+   # plt.show()
 
     return tabela
 
@@ -315,6 +320,6 @@ if __name__ == '__main__':
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     # display(best_1[0], fenotipo)
-    print(best_1[0])
-    print("----")
-    print(best_1[1])
+    #print(best_1[0])
+    #print("----")
+    #print(best_1[1])
