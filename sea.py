@@ -12,8 +12,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import copy
+from scipy.spatial.distance import hamming
+from math import factorial
 
-pd.set_option('display.max_rows', 'None')
+pd.set_option('display.max_rows', None)
 
 
 # Simple [Binary] Evolutionary Algorithm
@@ -29,6 +31,9 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     swap_index = np.zeros((numb_generations, 1))
     best_fit = np.zeros((numb_generations, 2))
     avg_fit = np.zeros((numb_generations, 2))
+    hamming_fit = np.zeros((numb_generations, 2))
+    hamming_both_index = np.zeros((numb_generations, 1))
+    hamming_both = []
 
     for k in range(numb_generations):
         #print("geraçao", k)
@@ -94,19 +99,35 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         best_fit[k][1] = populacao_2[0][1]
         avg_fit[k][0] = np.mean(avg_1)
         avg_fit[k][1] = np.mean(avg_2)
+        hamming_fit[k][0] = calculate_hamming(populacao_1, populacao_1)
+        hamming_fit[k][1] = calculate_hamming(populacao_2, populacao_2)
+        hamming_both_index[k] = calculate_hamming(populacao_1, populacao_2)
+        hamming_both.append(calculate_hamming_all(populacao_1, populacao_2))
 
-    bleh = np.concatenate((best_fit, avg_fit, swap_index), axis=1)
-    tabela = pd.DataFrame(bleh, columns=["Fitness 1", "Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Swap index"])
-    #print(tabela)
-    #tabela["Fitness 1"].plot(label="Fitness 1")
-    #tabela["Fitness 2"].plot(label="Fitness 2")
-    #plt.legend()
+    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both_index, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Index 1,2", "Swap index"])
+    print(tabela)
+    plt.figure(1)
+    plt.title("Fitness values")
+    tabela["Best Fitness 1"].plot(label="Best Fitness 1")
+    tabela["Avg Fitness 1"].plot(label="Average Fitness 1")
+    tabela["Best Fitness 2"].plot(label="Best Fitness 2")
+    tabela["Avg Fitness 2"].plot(label="Average Fitness 2")
+    plt.legend()
 
     swap_index = swap_index.T
     indexes = np.where(swap_index == 1)
-    #print(indexes[1])
-    #plt.vlines(indexes[1], -600, 50, color="red")
-   # plt.show()
+    # print(indexes[1])
+    plt.vlines(indexes[1], -600, 50, color="red")
+    plt.show()
+
+    plt.figure(2)
+    plt.title("Hamming Distances")
+    tabela["Avg Hamming 1"].plot(label="Average Hamming 1")
+    tabela["Avg Hamming 2"].plot(label="Average Hamming 2")
+    tabela["Avg Hamming Index 1,2"].plot(label="Average Hamming Index by index")
+    plt.legend()
+    plt.show()
 
     return tabela
 
@@ -126,45 +147,22 @@ def switch_random(pop, n, size_cromo, fitness_func):
     pop[len(pop) - n:] = new_pop
 
 
+def calculate_hamming(pop_1, pop_2):
+    res = []# np.zeros((factorial(len(pop_1))) / (factorial(len(pop_1) - 2) * factorial(2)))
+    # print(res.shape)
+    for i in range(len(pop_1)):
+        for j in range(i + 1, len(pop_1)):
+            res.append(hamming(pop_1[i][0], pop_2[j][0]))
+    return np.mean(res)#, res
 
-# Simple [Binary] Evolutionary Algorithm
-# Return the best plus, best by generation, average population by generation
-def sea_for_plot(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation,sel_survivors, fitness_func):
-    # inicializa população: indiv = (cromo,fit)
-    populacao = gera_pop(size_pop, size_cromo)
-    # avalia população
-    populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]
 
-    # para a estatística
-    stat = [best_pop(populacao)[1]]
-    stat_aver = [average_pop(populacao)]
-
-    for i in range(numb_generations):
-        # selecciona progenitores
-        mate_pool = sel_parents(populacao)
-        # Variation
-        # ------ Crossover
-        progenitores = []
-        for i in range(0, size_pop - 1, 2):
-            cromo_1 = mate_pool[i]
-            cromo_2 = mate_pool[i + 1]
-            filhos = recombination(cromo_1, cromo_2, prob_cross)
-            progenitores.extend(filhos)
-        # ------ Mutation
-        descendentes = []
-        for indiv, fit in progenitores:
-            novo_indiv = mutation(indiv, prob_mut)
-            descendentes.append((novo_indiv, fitness_func(novo_indiv)))
-        # New population
-        populacao = sel_survivors(populacao, descendentes)
-        # Avalia nova _população
-        populacao = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao]
-
-        # Estatística
-        stat.append(best_pop(populacao)[1])
-        stat_aver.append(average_pop(populacao))
-
-    return best_pop(populacao), stat, stat_aver
+def calculate_hamming_all(pop_1, pop_2):
+    res = np.zeros((len(pop_1), len(pop_2)))
+    for i in range(res.shape[0]):
+        for j in range(res.shape[1]):
+            res[i][j] = hamming(pop_1[i][0], pop_2[j][0])
+            res[j][i] = hamming(pop_1[i][0], pop_2[j][0])
+    return res
 
 
 # Initialize population
