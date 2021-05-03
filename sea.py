@@ -11,8 +11,9 @@ from operator import itemgetter
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import copy
 
-pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_rows', 'None')
 
 
 # Simple [Binary] Evolutionary Algorithm
@@ -78,7 +79,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
             # change individuals
             if method == 1:
                 # print("switch_indivs")
-                switch_indivs(populacao_1, populacao_2, replace_n)
+                populacao_1, populacao_2 = switch_indivs(populacao_1, populacao_2, replace_n)
             else:
                 # print("switch randoms")
                 switch_random(populacao_1, replace_n, size_cromo, fitness_func)
@@ -111,10 +112,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
 
 
 def switch_indivs(pop_1, pop_2, n):
-    # print(pop_1[len(pop_1) - n:])
-    aux = pop_1[len(pop_1) - n:]
-    pop_2[len(pop_2) - n:] = pop_1[len(pop_2) - n:]
-    pop_1[len(pop_1) - n:] = aux
+    copy_pop_1 = copy.deepcopy(pop_1)
+    copy_pop_2 = copy.deepcopy(pop_2)
+    aux = copy_pop_2[len(pop_2) - n:]
+    copy_pop_2[len(pop_2) - n:] = copy_pop_1[len(pop_1) - n:]
+    copy_pop_1[len(pop_1) - n:] = aux
+    return copy_pop_1, copy_pop_2
 
 
 def switch_random(pop, n, size_cromo, fitness_func):
@@ -306,7 +309,7 @@ if __name__ == '__main__':
     #to test the code with oneMax function
     n_gen = 200
     size_pop = 20
-    size_cromo = 200
+    size_cromo = 200        # Array de zeros e uns
     prob_mut = 0.01
     prob_cross = 0.8
     sel_parents = tour_sel(4)
