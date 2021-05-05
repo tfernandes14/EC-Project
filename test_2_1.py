@@ -28,7 +28,7 @@ if __name__ == '__main__':
     sel_parent = [tour_sel(2), tour_sel(3), tour_sel(4), tour_sel(5)]
     count = 0
 
-    np.random.seed(seeds[3])
+    np.random.seed(seeds[4])
     #test different frequences for replacement
     #pop size
     for pop_size in [20, 100, 150]:
@@ -39,8 +39,8 @@ if __name__ == '__main__':
 
                         df = sea(n_gen, pop_size, size_cromo, muta, cross, sel_parent[sel_parent_ind], recomb[recomb_ind], mutation, sel_survivors, fitness_func, 0, replace_n, method)
                         #write df
-                        df.to_csv("seed_3\seed{}pop_size{}muta{}cross{}recob{}sel_parents{}.csv".format(
-                        seeds[3],
+                        df.to_csv("seed_4\seed{}pop_size{}muta{}cross{}recob{}sel_parents{}.csv".format(
+                        seeds[4],
                         pop_size,
                         muta,
                         cross,
@@ -52,20 +52,3 @@ if __name__ == '__main__':
                         )
                         count += 1
                         print(count)
-"""
-    for seed in seeds:
-        np.random.seed(seed)
-        #test different frequences for replacement
-        for i in [0, 0.25, 0.5, 0.75, 1]:
-            df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
-            #write df
-            df.to_csv("seed_{}_freq_{}_method_{}_numpop_2.csv".format(
-            seed,
-            freq,
-            method,
-            ),
-            index=False,
-            index_label=False
-        )
-    
-"""
