@@ -32,8 +32,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     best_fit = np.zeros((numb_generations, 2))
     avg_fit = np.zeros((numb_generations, 2))
     hamming_fit = np.zeros((numb_generations, 2))
-    hamming_both_index = np.zeros((numb_generations, 1))
-    hamming_both = []
+    hamming_both = np.zeros((numb_generations, 1))
 
     for k in range(numb_generations):
         #print("geraçao", k)
@@ -101,11 +100,10 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         avg_fit[k][1] = np.mean(avg_2)
         hamming_fit[k][0] = calculate_hamming(populacao_1, populacao_1)
         hamming_fit[k][1] = calculate_hamming(populacao_2, populacao_2)
-        hamming_both_index[k] = calculate_hamming(populacao_1, populacao_2)
-        hamming_both.append(calculate_hamming_all(populacao_1, populacao_2))
+        hamming_both[k] = calculate_hamming_all(populacao_1, populacao_2)
 
-    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both_index, swap_index), axis=1)
-    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Index 1,2", "Swap index"])
+    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Pop", "Swap index"])
     print(tabela)
     plt.figure(1)
     plt.title("Fitness values")
@@ -125,7 +123,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     plt.title("Hamming Distances")
     tabela["Avg Hamming 1"].plot(label="Average Hamming 1")
     tabela["Avg Hamming 2"].plot(label="Average Hamming 2")
-    tabela["Avg Hamming Index 1,2"].plot(label="Average Hamming Index by index")
+    tabela["Avg Hamming Pop"].plot(label="Average Hamming between Populations")
     plt.legend()
     plt.show()
 
@@ -157,12 +155,12 @@ def calculate_hamming(pop_1, pop_2):
 
 
 def calculate_hamming_all(pop_1, pop_2):
-    res = np.zeros((len(pop_1), len(pop_2)))
-    for i in range(res.shape[0]):
-        for j in range(res.shape[1]):
-            res[i][j] = hamming(pop_1[i][0], pop_2[j][0])
-            res[j][i] = hamming(pop_1[i][0], pop_2[j][0])
-    return res
+    combs = (factorial(len(pop_1))) / (factorial(len(pop_1) - 2) * factorial(2))
+    res = []
+    for i in range(len(pop_1)):
+        for j in range(i, len(pop_2)):
+            res.append(hamming(pop_1[i][0], pop_2[j][0]))
+    return sum(res) / combs
 
 
 # Initialize population
