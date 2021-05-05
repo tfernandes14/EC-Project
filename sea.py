@@ -5,7 +5,6 @@ TODO:
 - guardar as iterações em que troca
 '''
 
-
 from random import random, randint, sample
 from operator import itemgetter
 import matplotlib.pyplot as plt
@@ -21,6 +20,8 @@ pd.set_option('display.max_rows', None)
 # Simple [Binary] Evolutionary Algorithm
 def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method):
     # inicialize population: indiv = (cromo, fit)
+   
+
     populacao_1 = gera_pop(size_pop, size_cromo)
     populacao_2 = gera_pop(size_pop, size_cromo)
 
@@ -86,8 +87,8 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
                 populacao_1, populacao_2 = switch_indivs(populacao_1, populacao_2, replace_n)
             else:
                 # print("switch randoms")
-                switch_random(populacao_1, replace_n, size_cromo, fitness_func)
-                switch_random(populacao_2, replace_n, size_cromo, fitness_func)
+                populacao_1 = switch_random(populacao_1, replace_n, size_cromo, fitness_func)
+                populacao_2 = switch_random(populacao_2, replace_n, size_cromo, fitness_func)
 
         populacao_1.sort(key=itemgetter(1), reverse=True)     # Descending order
         populacao_2.sort(key=itemgetter(1), reverse=True)     # Descending order
@@ -104,7 +105,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
 
     bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both, swap_index), axis=1)
     tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Pop", "Swap index"])
-    print(tabela)
+    """print(tabela)
     plt.figure(1)
     plt.title("Fitness values")
     tabela["Best Fitness 1"].plot(label="Best Fitness 1")
@@ -125,7 +126,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     tabela["Avg Hamming 2"].plot(label="Average Hamming 2")
     tabela["Avg Hamming Pop"].plot(label="Average Hamming between Populations")
     plt.legend()
-    plt.show()
+    plt.show()"""
 
     return tabela
 
@@ -143,6 +144,8 @@ def switch_random(pop, n, size_cromo, fitness_func):
     new_pop = gera_pop(n, size_cromo)
     new_pop = [(indiv[0], fitness_func(indiv[0])) for indiv in new_pop]
     pop[len(pop) - n:] = new_pop
+    
+    return copy.deepcopy(pop)
 
 
 def calculate_hamming(pop_1, pop_2):
@@ -165,7 +168,7 @@ def calculate_hamming_all(pop_1, pop_2):
 
 # Initialize population
 def gera_pop(size_pop, size_cromo):
-    return [(gera_indiv(size_cromo), 0) for i in range(size_pop)]
+   return [(gera_indiv(size_cromo), 0) for i in range(size_pop)]
 
 def gera_indiv(size_cromo):
     # random initialization
@@ -300,7 +303,7 @@ def viola(indiv,comp):
                 vi += 1
         v += vi
     return v
-
+"""
 if __name__ == '__main__':
     #to test the code with oneMax function
     n_gen = 200
@@ -322,3 +325,4 @@ if __name__ == '__main__':
     #print(best_1[0])
     #print("----")
     #print(best_1[1])
+   """
