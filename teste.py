@@ -34,7 +34,7 @@ if __name__ == '__main__':
     random.seed(2021)
     seeds = [random.randint(2, 3500) for i in range(30)]
 
-    for i in range(10, 20):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
+    for i in range(15, 20):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
         seed = seeds[i]     
         count = 0
 
@@ -50,10 +50,10 @@ if __name__ == '__main__':
                 for method in [1,2]:
                     df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace, method)
                     df.to_csv("testing\seed_" + str(i) + "\seed{}freq{}num_replace{}method{}.csv".format(
-                    seed,
-                    freq,
-                    replace_n,
-                    method,
+                        seed,
+                        freq,
+                        replace_n,
+                        method,
                     ),
                         index=False,
                         index_label=False

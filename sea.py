@@ -85,10 +85,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
             if method == 1:
                 # print("switch_indivs")
                 populacao_1, populacao_2 = switch_indivs(populacao_1, populacao_2, replace_n)
-            else:
+            elif method == 2:
                 # print("switch randoms")
                 populacao_1 = switch_random(populacao_1, replace_n, size_cromo, fitness_func)
                 populacao_2 = switch_random(populacao_2, replace_n, size_cromo, fitness_func)
+            elif method == 3:
+                populacao_1 = switch_indivs_dist(populacao_1, populacao_2, replace_n)
 
         populacao_1.sort(key=itemgetter(1), reverse=True)     # Descending order
         populacao_2.sort(key=itemgetter(1), reverse=True)     # Descending order
@@ -146,6 +148,31 @@ def switch_random(pop, n, size_cromo, fitness_func):
     pop[len(pop) - n:] = new_pop
     
     return copy.deepcopy(pop)
+
+
+def switch_indivs_dist(pop1, pop2, n):
+    copy_pop1 = copy.deepcopy(pop1)
+    copy_pop2 = copy.deepcopy(pop2)
+    
+    indexes = []
+    for i in range(n):
+        index = 0
+        mini = pop1[0][1]
+        for k in range(1, len(pop1)):
+            if mini >= pop1[k][1]:
+                mini = pop1[k][1]
+                index = k
+
+        dists = [hamming(pop1[index][0], pop2[j][0]) for j in range(len(copy_pop2))]
+        index_change = dists.index(max(dists))
+        indexes.append(index_change)
+
+        aux = copy_pop2[index_change]
+        copy_pop1[index] = aux
+
+        copy_pop2.pop(index_change)
+
+    return copy_pop1
 
 
 def calculate_hamming(pop_1, pop_2):
@@ -306,9 +333,9 @@ def viola(indiv,comp):
 """
 if __name__ == '__main__':
     #to test the code with oneMax function
-    n_gen = 200
-    size_pop = 20
-    size_cromo = 200        # Array de zeros e uns
+    n_gen = 15
+    size_pop = 5
+    size_cromo = 10        # Array de zeros e uns
     prob_mut = 0.01
     prob_cross = 0.8
     sel_parents = tour_sel(4)
@@ -316,9 +343,9 @@ if __name__ == '__main__':
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.03)
     fitness_func = fitness
-    freq = 0
+    freq = 0.7
     replace_n = int(0.5 * size_pop)
-    method = 1   # 1 - Switch indiv / 2 - Switch random
+    method = 3   # 1 - Switch indiv / 2 - Switch random / 3 - switch indivs dist
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     # display(best_1[0], fenotipo)
