@@ -14,12 +14,12 @@ import os as os
 
 if __name__ == '__main__':
     
-    n_gen = 400
-    size_pop = 30
+    n_gen = 150
+    size_pop = 50
     size_cromo = 100
-    prob_mut = 0.01
-    prob_cross = 0.8
-    sel_parents = tour_sel(4)
+    prob_mut = 0.025
+    prob_cross = 0.5
+    sel_parents = tour_sel(5)
     recombination = uniform_cross
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.02)
