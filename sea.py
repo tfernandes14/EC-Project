@@ -58,7 +58,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         populacao_1 = [(indiv[0], fitness_func(indiv[0])) for indiv in populacao_1]
 
         # parents selection
-        mate_pool = sel_parents(populacao_1)
+        mate_pool = sel_parents(populacao_2)
         # Variation
         # ------ Crossover
         progenitores = []
