@@ -4,7 +4,7 @@ Created on Wed May  5 13:57:47 2021
 
 @author: Ricardo
 """
-from sea import sea, tour_sel, muta_bin, fitness, one_point_cross, two_points_cross, sel_survivors_elite, uniform_cross
+from sea_knapsack import sea, tour_sel, muta_bin, fitness, one_point_cross, two_points_cross, sel_survivors_elite, uniform_cross
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
