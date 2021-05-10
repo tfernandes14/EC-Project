@@ -5,7 +5,7 @@ TODO:
 - guardar as iterações em que troca
 '''
 
-from random import random, randint, sample
+from random import random, randint, sample, seed
 from operator import itemgetter
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -20,23 +20,26 @@ pd.set_option('display.max_rows', None)
 
 problem = {
     'values': [
+        360, 83, 59, 130, 431, 67, 230, 52, 93, 125, 670, 892, 600, 38, 48, 147, 78, 256, 63, 17, 120, 164, 432, 35, 92, 110, 22, 42, 50, 323, 514, 28, 87, 73, 78, 15, 26, 78, 210, 36, 85, 189, 274, 43, 33, 10, 19, 389, 276, 312,
         360, 83, 59, 130, 431, 67, 230, 52, 93, 125, 670, 892, 600, 38, 48, 147, 78, 256, 63, 17, 120, 164, 432, 35, 92, 110, 22, 42, 50, 323, 514, 28, 87, 73, 78, 15, 26, 78, 210, 36, 85, 189, 274, 43, 33, 10, 19, 389, 276, 312
     ],
     'weights': [
+        7, 0, 30, 22, 80, 94, 11, 81, 70, 64, 59, 18, 0, 36, 3, 8, 15, 42, 9, 0, 42, 47, 52, 32, 26, 48, 55, 6, 29, 84, 2, 4, 18, 56, 7, 29, 93, 44, 71, 3, 86, 66, 31, 65, 0, 79, 20, 65, 52, 13,
         7, 0, 30, 22, 80, 94, 11, 81, 70, 64, 59, 18, 0, 36, 3, 8, 15, 42, 9, 0, 42, 47, 52, 32, 26, 48, 55, 6, 29, 84, 2, 4, 18, 56, 7, 29, 93, 44, 71, 3, 86, 66, 31, 65, 0, 79, 20, 65, 52, 13
     ],
-    'capacity': 850
+    'capacity': 1700
 }
 
-# Total value = 7534
-# Total weight: 850
-# Packed items: [0, 1, 3, 4, 6, 10, 11, 12, 14, 15, 16, 17, 18, 19, 21, 22, 24, 27, 28, 29, 30, 31, 32, 34, 38, 39, 41, 42, 44, 47, 48, 49]
-# Packed_weights: [7, 0, 22, 80, 11, 59, 18, 0, 3, 8, 15, 42, 9, 0, 47, 52, 26, 6, 29, 84, 2, 4, 18, 7, 71, 3, 66, 31, 0, 65, 52, 13]
+
+# Total value: 15116
+# Total weight: 1700
+# Packed items: [0, 1, 3, 4, 6, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 29, 30, 31, 32, 34, 38, 39, 41, 42, 44, 47, 48, 49, 50, 51, 53, 54, 56, 60, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 77, 79, 80, 81, 82, 84, 88, 89, 91, 92, 94, 97, 98, 99]
+# Packed_weights: [7, 0, 22, 80, 11, 59, 18, 0, 3, 8, 15, 42, 9, 0, 42, 47, 52, 26, 6, 84, 2, 4, 18, 7, 71, 3, 66, 31, 0, 65, 52, 13, 7, 0, 22, 80, 11, 59, 18, 0, 3, 8, 15, 42, 9, 0, 42, 47, 52, 6, 84, 2, 4, 18, 7, 71, 3, 66, 31, 0, 65, 52, 13]
 
 
 # Knapsack Evolutionary Algorithm
 def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method):
-    # start = time.time()
+    start = time.time()
     # inicialize population: indiv = (cromo, fit)
     populacao_1 = gera_pop(size_pop, size_cromo)
     populacao_2 = gera_pop(size_pop, size_cromo)
@@ -49,7 +52,6 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     best_fit = np.zeros((numb_generations, 2))
     avg_fit = np.zeros((numb_generations, 2))
     hamming_fit = np.zeros((numb_generations, 2))
-    hamming_both = np.zeros((numb_generations, 1))
 
     for k in range(numb_generations):
         #print("geraçao", k)
@@ -119,12 +121,11 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         avg_fit[k][1] = np.mean(avg_2)
         hamming_fit[k][0] = calculate_hamming(populacao_1, populacao_1)
         hamming_fit[k][1] = calculate_hamming(populacao_2, populacao_2)
-        hamming_both[k] = calculate_hamming_all(populacao_1, populacao_2)
     
     # print("====", time.time() - start)
-    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both, swap_index), axis=1)
-    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Pop", "Swap index"])
-    print(tabela)
+    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Swap index"])
+    '''print(tabela)
     plt.figure(1)
     plt.title("Fitness values")
     tabela["Best Fitness 1"].plot(label="Best Fitness 1")
@@ -145,7 +146,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     tabela["Avg Hamming 2"].plot(label="Average Hamming 2")
     tabela["Avg Hamming Pop"].plot(label="Average Hamming between Populations")
     plt.legend()
-    plt.show()
+    plt.show()'''
 
     return tabela
 
@@ -366,9 +367,11 @@ def decode_int(indiv, problem):
 
 '''if __name__ == '__main__':
     #to test the code with oneMax function
-    n_gen = 300
+    np.random.seed(0)
+    seed(0)
+    n_gen = 200
     size_pop = 10
-    size_cromo = 50        # Array de zeros e uns
+    size_cromo = len(problem["values"])        # Array de zeros e uns
     prob_mut = 0.01
     prob_cross = 0.8
     sel_parents = tour_sel(4)
@@ -376,11 +379,12 @@ def decode_int(indiv, problem):
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.03)
     fitness_func = fitness
-    freq = 0.7
+    freq = 0.6
     replace_n = int(0.5 * size_pop)
-    method = 1   # 1 - Switch indiv / 2 - Switch random / 3 - switch indivs dist
+    method = 3   # 1 - Switch indiv / 2 - Switch random / 3 - switch indivs dist
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
+    # print(best_1)
     # display(best_1[0], fenotipo)
     #print(best_1[0])
     #print("----")
