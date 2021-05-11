@@ -13,15 +13,15 @@ import numpy as np
 import copy
 from scipy.spatial.distance import hamming
 from math import factorial
+import time
 
 pd.set_option('display.max_rows', None)
 
 
 # Simple [Binary] Evolutionary Algorithm
 def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method):
+    # start = time.time()
     # inicialize population: indiv = (cromo, fit)
-   
-
     populacao_1 = gera_pop(size_pop, size_cromo)
     populacao_2 = gera_pop(size_pop, size_cromo)
 
@@ -33,7 +33,6 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     best_fit = np.zeros((numb_generations, 2))
     avg_fit = np.zeros((numb_generations, 2))
     hamming_fit = np.zeros((numb_generations, 2))
-    hamming_both = np.zeros((numb_generations, 1))
 
     for k in range(numb_generations):
         #print("geraçao", k)
@@ -45,12 +44,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         for i in range(0, size_pop - 1, 2):
             indiv_1= mate_pool[i]
             indiv_2 = mate_pool[i + 1]
-            filhos = recombination(indiv_1, indiv_2, prob_cross)
+            filhos = recombination[0](indiv_1, indiv_2, prob_cross[0])
             progenitores.extend(filhos)
         # ------ Mutation
         descendentes = []
         for indiv, fit in progenitores:
-            novo_indiv = mutation(indiv, prob_mut)
+            novo_indiv = mutation(indiv, prob_mut[0])
             descendentes.append((novo_indiv, fitness_func(novo_indiv)))
         # New population
         populacao_1 = sel_survivors(populacao_1, descendentes)
@@ -65,12 +64,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         for i in range(0, size_pop - 1, 2):
             indiv_1= mate_pool[i]
             indiv_2 = mate_pool[i + 1]
-            filhos = recombination(indiv_1, indiv_2, prob_cross)
+            filhos = recombination[1](indiv_1, indiv_2, prob_cross[1])
             progenitores.extend(filhos)
         # ------ Mutation
         descendentes = []
         for indiv, fit in progenitores:
-            novo_indiv = mutation(indiv, prob_mut)
+            novo_indiv = mutation(indiv, prob_mut[1])
             descendentes.append((novo_indiv, fitness_func(novo_indiv)))
         # New population
         populacao_2 = sel_survivors(populacao_2, descendentes)
@@ -103,11 +102,11 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         avg_fit[k][1] = np.mean(avg_2)
         hamming_fit[k][0] = calculate_hamming(populacao_1, populacao_1)
         hamming_fit[k][1] = calculate_hamming(populacao_2, populacao_2)
-        hamming_both[k] = calculate_hamming_all(populacao_1, populacao_2)
-
-    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, hamming_both, swap_index), axis=1)
-    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Avg Hamming Pop", "Swap index"])
-    """print(tabela)
+    
+    # print("====", time.time() - start)
+    bleh = np.concatenate((best_fit, avg_fit, hamming_fit, swap_index), axis=1)
+    tabela = pd.DataFrame(bleh, columns=["Best Fitness 1", "Best Fitness 2", "Avg Fitness 1", "Avg Fitness 2", "Avg Hamming 1", "Avg Hamming 2", "Swap index"])
+    '''print(tabela)
     plt.figure(1)
     plt.title("Fitness values")
     tabela["Best Fitness 1"].plot(label="Best Fitness 1")
@@ -128,7 +127,7 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
     tabela["Avg Hamming 2"].plot(label="Average Hamming 2")
     tabela["Avg Hamming Pop"].plot(label="Average Hamming between Populations")
     plt.legend()
-    plt.show()"""
+    plt.show()'''
 
     return tabela
 

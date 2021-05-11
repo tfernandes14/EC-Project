@@ -63,12 +63,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         for i in range(0, size_pop - 1, 2):
             indiv_1= mate_pool[i]
             indiv_2 = mate_pool[i + 1]
-            filhos = recombination(indiv_1, indiv_2, prob_cross)
+            filhos = recombination[0](indiv_1, indiv_2, prob_cross[0])
             progenitores.extend(filhos)
         # ------ Mutation
         descendentes = []
         for indiv, fit in progenitores:
-            novo_indiv = mutation(indiv, prob_mut)
+            novo_indiv = mutation(indiv, prob_mut[0])
             descendentes.append((novo_indiv, fitness_func(novo_indiv)))
         # New population
         populacao_1 = sel_survivors(populacao_1, descendentes)
@@ -83,12 +83,12 @@ def sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parent
         for i in range(0, size_pop - 1, 2):
             indiv_1= mate_pool[i]
             indiv_2 = mate_pool[i + 1]
-            filhos = recombination(indiv_1, indiv_2, prob_cross)
+            filhos = recombination[1](indiv_1, indiv_2, prob_cross[1])
             progenitores.extend(filhos)
         # ------ Mutation
         descendentes = []
         for indiv, fit in progenitores:
-            novo_indiv = mutation(indiv, prob_mut)
+            novo_indiv = mutation(indiv, prob_mut[1])
             descendentes.append((novo_indiv, fitness_func(novo_indiv)))
         # New population
         populacao_2 = sel_survivors(populacao_2, descendentes)
@@ -372,10 +372,10 @@ def decode_int(indiv, problem):
     n_gen = 200
     size_pop = 10
     size_cromo = len(problem["values"])        # Array de zeros e uns
-    prob_mut = 0.01
-    prob_cross = 0.8
+    prob_mut = [0.01, 0.05]
+    prob_cross = [0.8, 0.6]
     sel_parents = tour_sel(4)
-    recombination = two_points_cross
+    recombination = [two_points_cross, uniform_cross]
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.03)
     fitness_func = fitness
@@ -384,7 +384,7 @@ def decode_int(indiv, problem):
     method = 3   # 1 - Switch indiv / 2 - Switch random / 3 - switch indivs dist
     # sea(numb_generations, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
     best_1 = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
-    # print(best_1)
+    print(best_1)
     # display(best_1[0], fenotipo)
     #print(best_1[0])
     #print("----")

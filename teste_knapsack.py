@@ -16,10 +16,10 @@ if __name__ == '__main__':
     n_gen = 200
     size_pop = 10
     size_cromo = 100
-    prob_mut = 0.01
-    prob_cross = 0.8
+    prob_mut = [0.01, 0.05]
+    prob_cross = [0.8, 0.6]
     sel_parents = tour_sel(3)
-    recombination = two_points_cross
+    recombination = [two_points_cross, uniform_cross]
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.02)
     fitness_func = fitness

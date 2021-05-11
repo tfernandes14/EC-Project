@@ -16,10 +16,10 @@ if __name__ == '__main__':
     n_gen = 200
     size_pop = 50
     size_cromo = 50
-    prob_mut = 0.01
-    prob_cross = 0.5
+    prob_mut = [0.01, 0.05]
+    prob_cross = [0.9, 0.5]
     sel_parents = tour_sel(5)
-    recombination = uniform_cross
+    recombination = [two_points_cross, uniform_cross]
     mutation = muta_bin
     sel_survivors = sel_survivors_elite(0.02)
     fitness_func = fitness
@@ -41,6 +41,14 @@ if __name__ == '__main__':
         filepath = "testing/seed_" + str(i)
         if not os.path.exists(filepath):
             os.makedirs(filepath)
+
+        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, 0, 0, 0)
+        df.to_csv("testing\seed_" + str(i) + "\seed{}.csv".format(
+            seed,
+        ),
+            index=False,
+            index_label=False
+        )
 
 
         for freq in [0.1, 0.25, 0.5, 0.75, 0.9]:
