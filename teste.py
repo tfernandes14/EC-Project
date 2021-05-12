@@ -13,9 +13,9 @@ import os as os
 
 
 if __name__ == '__main__':
-    n_gen = 200
+    n_gen = 150
     size_pop = 50
-    size_cromo = 50
+    size_cromo = 100
     prob_mut = [0.01, 0.05]
     prob_cross = [0.9, 0.5]
     sel_parents = tour_sel(5)
