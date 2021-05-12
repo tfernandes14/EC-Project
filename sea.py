@@ -1,9 +1,7 @@
-'''
-TODO:
-- traçar graficos da evoluçao das populaçoes
-- juntar tudo num df
-- guardar as iterações em que troca
-'''
+# -*- coding: utf-8 -*-
+"""
+@authors: Francisco Guerra, Ricardo Martins, Tiago Fernandes, Ernesto Costa
+"""
 
 from random import random, randint, sample
 from operator import itemgetter

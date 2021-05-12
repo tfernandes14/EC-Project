@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed May  5 13:57:47 2021
-
-@author: Ricardo
+@authors: Francisco Guerra, Ricardo Martins, Tiago Fernandes, Ernesto Costa
 """
 from sea import sea, tour_sel, muta_bin, fitness, one_point_cross, two_points_cross, sel_survivors_elite, uniform_cross
 import matplotlib.pyplot as plt
@@ -10,6 +8,7 @@ import pandas as pd
 import numpy as np
 import random
 import os as os
+import sys
 
 
 if __name__ == '__main__':
@@ -24,13 +23,62 @@ if __name__ == '__main__':
     sel_survivors = sel_survivors_elite(0.02)
     fitness_func = fitness
     
+    if len(sys.argv) == 5:
+        freq =  float(sys.argv[1])
+        replace_n =   float(sys.argv[2])
+        method =  int(sys.argv[3])
+        seed = int(sys.argv[4])
+        random.seed(seed)
+        np.random.seed(seed)
+
+        replace = int(size_pop * replace_n)
+
+        print(freq)
+        print(replace_n)
+        print(method)
+        print(seed)
+        print(replace)
+
+        filepath = "testing/seed_" + str(seed)
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+
+        random.seed(seed)
+        np.random.seed(seed)
+        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace, method)
+        df.to_csv("testing\seed_" + str(seed) + "\seed{}freq{}num_replace{}method{}.csv".format(
+            seed,
+            freq,
+            replace_n,
+            method,
+        ),
+            index=False,
+            index_label=False
+        )
+
+    else:
+        seed = 2021
+        random.seed(seed)
+        np.random.seed(seed)
+
+        filepath = "testing/seed_" + str(seed)
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+
+        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, 0, 0, 0)
+        df.to_csv("testing\seed_" + str(seed) + "\seed{}.csv".format(
+            seed,
+        ),
+            index=False,
+            index_label=False
+        )
     """
     freq = 0.6
     replace_n = int(0.2 * size_pop)
     method = 2   # 1 - Switch indiv / 2 - Switch random
     #"""
     
-    random.seed(2021)
+    '''random.seed(2021)
     seeds = [random.randint(2, 3500) for i in range(30)]
 
     for i in range(15, 20):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
@@ -69,7 +117,7 @@ if __name__ == '__main__':
                     )
                     count += 1
                     print(count)
-
+'''
     
 
     

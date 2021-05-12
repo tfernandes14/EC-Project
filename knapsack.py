@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+@authors: Francisco Guerra, Ricardo Martins, Tiago Fernandes
+"""
+
+
 '''def knapSack(W, wt, val, n):
  
     # Base Case
