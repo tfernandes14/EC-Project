@@ -27,7 +27,7 @@ if __name__ == '__main__':
     
     if len(sys.argv) == 5:
         freq =  float(sys.argv[1])
-        replace_n =   float(sys.argv[2])
+        replace_n = float(sys.argv[2])
         method =  int(sys.argv[3])
         seed = int(sys.argv[4])
         random.seed(seed)
@@ -46,52 +46,50 @@ if __name__ == '__main__':
 
 
     else:
-
-
-    """
-    freq = 0.6
-    replace_n = int(0.2 * size_pop)
-    method = 2   # 1 - Switch indiv / 2 - Switch random
-    #"""
+        """
+        freq = 0.6
+        replace_n = int(0.2 * size_pop)
+        method = 2   # 1 - Switch indiv / 2 - Switch random
+        #"""
     
-    random.seed(2021)
-    seeds = [random.randint(2, 3500) for i in range(30)]
+        random.seed(2021)
+        seeds = [random.randint(2, 3500) for i in range(30)]
 
-    for i in range(5):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
-        seed = seeds[i]
-        count = 0
+        for i in range(0, 15):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
+            seed = seeds[i]
+            count = 0
 
-        #write df
-        filepath = "testing_knapsack/seed_" + str(i)
-        if not os.path.exists(filepath):
-            os.makedirs(filepath)
+            #write df
+            filepath = "testing_knapsack/seed_" + str(i)
+            if not os.path.exists(filepath):
+                os.makedirs(filepath)
 
-        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, 0, 0, 0)
-        df.to_csv("testing_knapsack\seed_" + str(i) + "\seed{}.csv".format(
-            seed,
-        ),
-            index=False,
-            index_label=False
-        )
+            df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, 0, 0, 0)
+            df.to_csv("testing_knapsack\seed_" + str(i) + "\seed{}.csv".format(
+                seed,
+            ),
+                index=False,
+                index_label=False
+            )
 
-        '''for freq in [0.1, 0.25, 0.5, 0.75, 0.9]:
-            for replace_n in [0.05, 0.1, 0.25, 0.4, 0.5]:
-                replace = int(size_pop * replace_n)
-                for method in [1, 2, 3]:
-                    random.seed(seed)
-                    np.random.seed(seed)
-                    df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace, method)
-                    df.to_csv("testing_knapsack\seed_" + str(i) + "\seed{}freq{}num_replace{}method{}.csv".format(
-                        seed,
-                        freq,
-                        replace_n,
-                        method,
-                    ),
-                        index=False,
-                        index_label=False
-                    )
-                    count += 1
-                    print(count)'''
+            '''for freq in [0.1, 0.25, 0.5, 0.75, 0.9]:
+                for replace_n in [0.05, 0.1, 0.25, 0.4, 0.5]:
+                    replace = int(size_pop * replace_n)
+                    for method in [1, 2, 3]:
+                        random.seed(seed)
+                        np.random.seed(seed)
+                        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace, method)
+                        df.to_csv("testing_knapsack\seed_" + str(i) + "\seed{}freq{}num_replace{}method{}.csv".format(
+                            seed,
+                            freq,
+                            replace_n,
+                            method,
+                        ),
+                            index=False,
+                            index_label=False
+                        )
+                        count += 1
+                        print(count)'''
 
     
 
