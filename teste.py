@@ -33,7 +33,7 @@ if __name__ == '__main__':
     random.seed(2021)
     seeds = [random.randint(2, 3500) for i in range(30)]
 
-    for i in range(15, 20):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
+    for i in range(15, 30):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
         seed = seeds[i]
         count = 0
 
