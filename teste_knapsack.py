@@ -72,8 +72,8 @@ if __name__ == '__main__':
                 index_label=False
             )
 
-            '''for freq in [0.1, 0.25, 0.5, 0.75, 0.9]:
-                for replace_n in [0.05, 0.1, 0.25, 0.4, 0.5]:
+            for freq in [0.1, 0.5, 0.9]:
+                for replace_n in [0.1, 0.25, 0.5]:
                     replace = int(size_pop * replace_n)
                     for method in [1, 2, 3]:
                         random.seed(seed)
@@ -89,9 +89,4 @@ if __name__ == '__main__':
                             index_label=False
                         )
                         count += 1
-                        print(count)'''
-
-    
-
-    
-    
+                        print(count)
