@@ -32,8 +32,8 @@ if __name__ == '__main__':
         seed = int(sys.argv[4])
         random.seed(seed)
         np.random.seed(seed)
-        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace, method)
-        df.to_csv("testing_knapsack\seed_" + str(i) + "\seed{}freq{}num_replace{}method{}.csv".format(
+        df = sea(n_gen, size_pop, size_cromo, prob_mut, prob_cross, sel_parents, recombination, mutation, sel_survivors, fitness_func, freq, replace_n, method)
+        df.to_csv("testing_knapsack\seed_" + seed+ "\seed{}freq{}num_replace{}method{}.csv".format(
             seed,
             freq,
             replace_n,
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         random.seed(2021)
         seeds = [random.randint(2, 3500) for i in range(30)]
 
-        for i in range(0, 15):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
+        for i in range(0, 30):     # 0 - 10 (9) Ricardo, 10 - 20 (19) Tiago, 20 - 30 (29) Guerra
             seed = seeds[i]
             count = 0
 
