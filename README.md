@@ -2,18 +2,32 @@
 
 É possível encontrar soluções para os números de João Brandão e para o Knapsack.
 
-O código com o algoritmo evolucionário para os números de João Brandão encontra-se no sea.py.
+## Números de João Brandão
+
+O código com o algoritmo evolucionário para os números de João Brandão encontra-se no ficheiro "sea.py".
 
 Para correr o algoritmo é necessário usar o comando:
 
-python JBTeste.py freq replace_n method seed
+```bash
+python JBTeste.py <freq> <replace_n> <method> <seed>
+```
+### Parâmetros:
+- "freq" é a percentagem de frequência de troca [0, 1]
+- "replace_n" é a percentagem de indivíduos a serem trocados [0, 1]
+- "method" é o método das trocas dos elementos da população [1, 3]
+- "seed" é a seed utilizada para gerar números aleatórios
 
-Em que freq é a percentgem de frequência de troca, replace_n é a percentágem de indivíduos a serem trocados, method é o método das trocas dos elementos da população de 1 a 3 e a seed é a seed utilizada para gerar números random. 
+## Problema de Knapsack
 
-O código com o algoritmo evolucionário para o knapsack encontra-se no sea_knapsack.py.
+O código com o algoritmo evolucionário para o Knapsack encontra-se no ficheiro "sea_knapsack.py".
 
 Para correr o algoritmo é necessário usar o comando:
 
-python knapsackTeste.py freq replace_n method seed
-
-Em que freq é a percentgem de frequência de troca, replace_n é a percentágem de indivíduos a serem trocados, method é o método das trocas dos elementos da população de 1 a 3 e a seed é a seed utilizada para gerar números random. 
+```bash
+python knapsackTeste.py <freq> <replace_n> <method> <seed>
+```
+### Parâmetros:
+- "freq" é a percentagem de frequência de troca [0, 1]
+- "replace_n" é a percentagem de indivíduos a serem trocados [0, 1]
+- "method" é o método das trocas dos elementos da população [1, 3]
+- "seed" é a seed utilizada para gerar números aleatórios
